@@ -1,0 +1,138 @@
+body {
+    background-color: #212121;
+
+    font-family: Andale Mono,AndaleMono,monospace; 
+    letter-spacing: 0px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #f5f6fa;
+}
+
+#container {
+    width: 1000px;
+    height: 600px;
+    border: 1px solid black;
+    margin: auto;
+}
+
+#left-panel {
+    width: 680px;
+    height: 580px;
+    float: left;
+    border: 1px solid green;
+}
+
+#right-panel {
+    width: 300px;
+    height: 580px;
+    float: left;
+    border: 1px solid red;
+}
+
+#output {
+    width: 680px;
+    height: 480px;
+    border: 1px solid pink;
+}
+
+#chat-input {
+    width: 680px;
+    height: 90px;
+    border: 1px solid blue;
+    margin: auto;
+    /*box-shadow: inset 0px 0px 5px#000;*/
+    /*padding-bottom: 10px;*/
+}
+    #chat-input textarea {
+        /* size */
+        width: 600px;
+        height: 90px;
+        /*padding: 10px;
+        padding-right: 35px;*/
+
+        /* font styling*/
+        font-family: Andale Mono,AndaleMono,monospace; 
+        letter-spacing: 0px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #f5f6fa;
+
+        /* border styling */
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        border: 1px solid rgb(47, 47, 47);
+        
+        /* styling */
+        resize: none;
+        box-sizing: border-box;
+        background-color: #2F2F2F;
+    }
+        #chat-input textarea:focus {
+            outline-color: transparent;
+            outline-style: none;
+        }
+        /*
+        #query-form textarea::placeholder {
+            font-family: Andale Mono,AndaleMono,monospace; 
+            letter-spacing: 0px;
+        }
+        */
+
+    #chat-input button {
+        /* size and shape */
+        height: 30px;
+        width: 25px;
+        border-radius: 6px;
+        padding-bottom: 10px;
+        
+        /* positioning */
+        position: relative;
+        top: -35px;
+        left: 0px;
+
+        /* font styling */
+        font-family: Andale Mono,AndaleMono,monospace; 
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 22px;
+        color: #f5f6fa;
+        padding-right:2px;
+
+        /* styling */
+        border: none;
+        cursor: pointer;
+        background-color: #676767;
+        background-color: transparent;
+    }
+        #query-form button:hover {
+            background-color: #636e72;
+        }
+
+.text {
+    margin: 0;
+    padding: 0;
+    float: left;
+    white-space: pre;
+}
+    .text:hover {
+        cursor: pointer;
+    }
+    
+    .selected {
+        text-decoration: underline;
+    }
+
+.bar {
+    fill: steelblue;
+}.bar:hover {
+    fill: orange;
+}
+.axis text {
+    font-size: 12px;
+}
+.axis path,
+.axis line {
+    stroke: #000;
+}
