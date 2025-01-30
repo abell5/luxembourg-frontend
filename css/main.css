@@ -19,34 +19,49 @@ body {
     width: 680px;
     height: 580px;
     float: left;
-    border: 1px solid green;
+    border: 1px solid rgb(127, 140, 141);
+    margin-right: 10px;
 }
 
 #right-panel {
-    width: 300px;
+    width: 280px;
     height: 580px;
+    padding-left: 10px;
+    padding-right: 10px;
     float: left;
-    border: 1px solid red;
+    overflow: visible;
+    border: 1px solid rgb(127, 140, 141);
+    /*box-shadow: 1px 2px 2px black;*/
 }
 
 #output {
-    width: 680px;
-    height: 480px;
-    border: 1px solid pink;
+    width: 620px;
+    height: 449px;
+    padding: 30px;
 }
+    .start-char {
+        /* positioning */
+        position: relative;
+        top: 18px;
+        left: -12px;
+        font-size: 18px;
+        z-index: -1;
+    }
 
 #chat-input {
-    width: 680px;
-    height: 90px;
-    border: 1px solid blue;
+    width: 660px;
+    height: 50px;
+    padding: 10px;
+    background-color: #202c33;
     margin: auto;
+    border-top: 1px solid rgb(127, 140, 141);
     /*box-shadow: inset 0px 0px 5px#000;*/
     /*padding-bottom: 10px;*/
 }
     #chat-input textarea {
         /* size */
-        width: 600px;
-        height: 90px;
+        width: 610px;
+        height: 50px;
         /*padding: 10px;
         padding-right: 35px;*/
 
@@ -62,12 +77,12 @@ body {
         -webkit-border-radius: 6px;
         -moz-border-radius: 6px;
         border-radius: 6px;
-        border: 1px solid rgb(47, 47, 47);
-        
+        border: 1px solid rgb(127, 140, 141);
+
         /* styling */
         resize: none;
         box-sizing: border-box;
-        background-color: #2F2F2F;
+        background-color: #2a3942;
     }
         #chat-input textarea:focus {
             outline-color: transparent;
@@ -82,29 +97,30 @@ body {
 
     #chat-input button {
         /* size and shape */
-        height: 30px;
-        width: 25px;
+        height: 51px;
+        width: 40px;
         border-radius: 6px;
         padding-bottom: 10px;
         
         /* positioning */
         position: relative;
-        top: -35px;
+        top: -17px;
         left: 0px;
 
         /* font styling */
         font-family: Andale Mono,AndaleMono,monospace; 
         text-transform: uppercase;
         letter-spacing: 1px;
-        font-size: 22px;
+        font-size: 24px;
         color: #f5f6fa;
-        padding-right:2px;
+        padding-right: 2px;
+        padding-top: 8px;
 
         /* styling */
-        border: none;
         cursor: pointer;
-        background-color: #676767;
-        background-color: transparent;
+        border: 1px solid rgb(127, 140, 141);
+        background-color: #2a3942;
+
     }
         #query-form button:hover {
             background-color: #636e72;
@@ -119,15 +135,41 @@ body {
     .text:hover {
         cursor: pointer;
     }
-    
     .selected {
         text-decoration: underline;
+        text-decoration-color: rgb(39, 174, 96);
+        text-decoration-thickness: 3px;
+    }
+    .uncertainty {
+        background-color: #c0392b;
     }
 
+g {
+    overflow: visible;
+}
+
+svg {
+    overflow: visible;
+}
+
+.domain {
+    visibility: hidden;
+}
+
+.tick line {
+    visibility: hidden;
+}
+
+.tick text {
+    /* font styling */
+    font-family: Andale Mono,AndaleMono,monospace; 
+    letter-spacing: 1px;
+    font-size: 12px;
+    color: #f5f6fa !important;
+}
+
 .bar {
-    fill: steelblue;
-}.bar:hover {
-    fill: orange;
+    fill: rgb(39, 174, 96);
 }
 .axis text {
     font-size: 12px;

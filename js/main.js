@@ -4,6 +4,8 @@ $( document ).ready(function() {
 });
 
 function getStream() {
+    $("#output").empty()
+    $("#output").append($("<div>", {"class": "start-char"}).text(">"));
     var query = $("#chat-input textarea").val();
     let current_chunk_idx = 0;
     //var obj = JSON.parse('{"texts": [" language", " computer", " large", " machine", " artificial", " convers", " neutral", " Language", " virtual", " model", " AI", " text", " general", " few", " chat", " digital", " tool", " simulator", " knowledge", " simulation", " random", " small", "Language", " cloud", " Computer", " vocabulary", " regular", " new", " software", " high"], "token_ids": [4221, 6500, 3544, 5780, 21075, 7669, 21277, 11688, 4200, 1646, 15592, 1495, 4689, 2478, 6369, 7528, 5507, 42991, 6677, 19576, 4288, 2678, 14126, 9624, 17863, 36018, 5912, 502, 3241, 1579], "probs": [0.7770468592643738, 0.21096745133399963, 0.008808881975710392, 0.0011465136194601655, 0.0002181360760005191, 0.00020011013839393854, 0.00016280323325190693, 0.00014177054981701076, 0.0001345007767667994, 0.000130185711896047, 0.00012971069372724742, 0.00010374825797043741, 8.20313289295882e-05, 7.384506898233667e-05, 6.564196519320831e-05, 6.458257121266797e-05, 5.7273053243989125e-05, 4.999424345442094e-05, 4.7059573262231424e-05, 4.5079923438606784e-05, 4.303768218960613e-05, 4.110042209504172e-05, 3.8817244785605e-05, 3.6033306969329715e-05, 3.040168303414248e-05, 2.7615524231805466e-05, 2.736878377618268e-05, 2.733159089984838e-05, 2.678219971130602e-05, 2.5384848413523287e-05], "selected_idx": 0, "selected_text": " language"}')
@@ -11,7 +13,7 @@ function getStream() {
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=30&T=1&max_new_tokens=100&verbose=false",
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=30&T=2.0&max_new_tokens=100&verbose=false",
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -53,15 +55,20 @@ function getStream() {
 }
 
 async function build(obj) {
-    texts = obj['texts']
-    probs = obj['probs']
+    texts = obj['texts'];
+    probs = obj['probs'];
+    uncertainty = (1 - obj['probs'][obj['selected_idx']].toFixed(2));
     const data = texts.map((value, index) => ({ text: value, prob: probs[index].toFixed(2) }));
-    $("#output").append($("<div>", {"class": "text", "data-obj": JSON.stringify(data)}).on("click", function() {
-        $(".selected").removeClass("selected")
-        $(this).addClass("selected")
-        d = JSON.parse($(this).attr('data-obj'));
-        barplot_new(d)
-    }).text(obj['selected_text']));
+    $("#output").append($("<div>", {"class": "text", "data-obj": JSON.stringify(data)})
+                .on("click", function() {
+                    $(".selected").removeClass("selected")
+                    $(this).addClass("selected")
+                    d = JSON.parse($(this).attr('data-obj'));
+                    barplot_new(d)
+                })
+                .text(obj['selected_text'])
+                .css("background-color", "rgba(231, 76, 60," + uncertainty + ")")
+    );
 }
 
 function isObject(obj)
@@ -165,34 +172,39 @@ function barplot_new(data) {
     //const format = x.tickFormat(20, "%");
     // Chart dimensions
     const margin = { top: 20, right: 30, bottom: 40, left: 100 };
-    const width = 280 - margin.left - margin.right;
+    const width = 260 - margin.left - margin.right;
     const height = 580 - margin.top - margin.bottom;
+
     // Create SVG container
     const svg = d3.select('#barplot')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
+        .attr('transform', `translate(${margin.left},${margin.top})`)
+        .attr("fill", "white");
+
     // Create scales
     const xScale = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.prob)])
         .range([0, width]);
+
     const yScale = d3.scaleBand()
         .domain(data.map(d => d.text))
         .range([0, height])
         .padding(0.1);
+        
     // Add X-axis
     svg.append('g')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(xScale).ticks(5))
         .selectAll('text')
-        .style('font-size', '12px');
+        .attr("fill", "none");
         
     // Add Y-axis
     svg.append('g')
         .call(d3.axisLeft(yScale))
         .selectAll('text')
-        .style('font-size', '12px');
+        .attr("fill", "#f5f6fa");
         
     // Draw bars
     svg.selectAll('.bar')
@@ -203,7 +215,8 @@ function barplot_new(data) {
         .attr('y', d => yScale(d.text))
         .attr('x', 0)
         .attr('height', yScale.bandwidth())
-        .attr('width', d => xScale(d.prob));
+        .attr('width', d => xScale(d.prob))
+        .attr("fill", "white");
 
     // Add labels inside the bars
     svg.selectAll('.label')
@@ -215,7 +228,8 @@ function barplot_new(data) {
         .attr('y', d => yScale(d.text) + yScale.bandwidth() / 2)
         .attr('dy', '0.35em')
         .attr('dx', '8px')
-        .text(d => d.prob);
+        .text(d => d.prob)
+        .attr("fill", "white");
 }
 
 // https://d3-graph-gallery.com/graph/barplot_horizontal.html
