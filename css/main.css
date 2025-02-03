@@ -9,9 +9,9 @@ body {
 }
 
 #container {
-    width: 1040px;
+    width: 1020px;
     height: 600px;
-    border: 1px solid black;
+    /*border: 1px solid black;*/
     margin: auto;
 }
 
