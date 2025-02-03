@@ -21,7 +21,7 @@ function getStream() {
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.8&max_new_tokens=100&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.3&max_new_tokens=100&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -183,7 +183,7 @@ function barplot_new(data) {
         $.ajax({
             method: "POST",
             dataType: 'text',
-            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?idx_counter="+idx_counter+"&new_token_str="+text+"&k=25&T=1.8&max_new_tokens=100&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
+            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?idx_counter="+idx_counter+"&new_token_str="+text+"&k=25&T=1.3&max_new_tokens=100&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
             crossDomain: true,
             xhrFields: {
                 onprogress: function (event) {
