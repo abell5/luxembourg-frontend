@@ -49,6 +49,7 @@ body {
     width: 620px;
     height: 449px;
     padding: 30px;
+    overflow: hidden;
 }
     .start-char {
         /* positioning */

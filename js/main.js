@@ -21,7 +21,7 @@ function getStream() {
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.3&max_new_tokens=350&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.3&max_new_tokens=340&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -161,6 +161,16 @@ function barplot_new(data) {
         .text(d => d.prob)
         .attr("fill", "white");
 
+    $(".label").each(function() {
+        console.log("here")
+        var currentValue = $(this).text();
+    
+        // Check your condition here
+        if (currentValue === "0.00") {
+            $(this).text("<0.01");
+        }
+    });
+
     $(".tick").on( "click", function() {
         var text = $(this).text()
         var idx_counter = $(".selected").attr('data-idx-counter');
@@ -183,7 +193,7 @@ function barplot_new(data) {
         $.ajax({
             method: "POST",
             dataType: 'text',
-            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?idx_counter="+idx_counter+"&new_token_str="+text+"&k=25&T=1.3&max_new_tokens=350&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
+            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?idx_counter="+idx_counter+"&new_token_str="+text+"&k=25&T=1.3&max_new_tokens=340&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
             crossDomain: true,
             xhrFields: {
                 onprogress: function (event) {
