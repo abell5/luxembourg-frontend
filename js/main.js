@@ -21,7 +21,7 @@ function getStream() {
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.3&max_new_tokens=340&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=20&T=1.3&max_new_tokens=220&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -134,7 +134,7 @@ function barplot_new(data) {
     svg.append('g')
         .call(d3.axisLeft(yScale))
         .selectAll('text')
-        .attr("fill", "#f5f6fa");
+        .attr("fill", "#2d3436"); // Change back to white
         
     // Draw bars
     svg.selectAll('.bar')
@@ -146,7 +146,7 @@ function barplot_new(data) {
         .attr('x', 0)
         .attr('height', yScale.bandwidth())
         .attr('width', d => xScale(d.prob))
-        .attr("fill", "white");
+        .attr("fill", "#2d3436"); // Change back to white
 
     // Add labels inside the bars
     svg.selectAll('.label')
@@ -159,10 +159,10 @@ function barplot_new(data) {
         .attr('dy', '0.35em')
         .attr('dx', '8px')
         .text(d => d.prob)
-        .attr("fill", "white");
+        .attr("fill", "#2d3436"); // Change back to white
 
     $(".label").each(function() {
-        console.log("here")
+        //console.log("here")
         var currentValue = $(this).text();
     
         // Check your condition here
