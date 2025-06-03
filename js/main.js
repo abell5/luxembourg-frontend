@@ -15,13 +15,11 @@ function getStream() {
         console.log("RANDOM SATE USED: " + random_state)
     }
 
-    /*
-    if ($(".toggle").is(':checked')) {
-        uncertainty = (1 - obj['probs'][obj['selected_idx']].toFixed(2));
+    if ($(".safe-nudgetoggle").is(':checked')) {
+        safenudge = true
     } else {
-        uncertainty = 0
+        safenudge = false
     }
-    */
 
 
     var sleep_time = $("#sleep-time").val();
@@ -30,7 +28,7 @@ function getStream() {
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=20&T=1.3&max_new_tokens=10&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&safenudge="+safenudge+"&k=20&T=1.3&max_new_tokens=10&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -88,10 +86,14 @@ async function build(obj) {
 
     $("#output").append($("<div>", {"class": "text", "data-obj": JSON.stringify(data), "data-idx-counter": obj['idx_counter']})
                 .on("click", function() {
-                    $(".selected").removeClass("selected")
-                    $(this).addClass("selected")
-                    d = JSON.parse($(this).attr('data-obj'));
-                    barplot_new(d)
+                    if ($(".safenudge-toggle").is(':checked')) {
+                        alert('Probability viewing is not allowed while SafeNudge(TM) is activated.')
+                    } else {
+                        $(".selected").removeClass("selected")
+                        $(this).addClass("selected")
+                        d = JSON.parse($(this).attr('data-obj'));
+                        barplot_new(d)
+                    }
                 })
                 .text(obj['selected_text'])
                 .css("background-color", "rgba(231, 76, 60," + uncertainty + ")")
@@ -188,72 +190,77 @@ function barplot_new(data) {
     });
 
     $(".tick").on( "click", function() {
-        var text = $(this).text()
-        var idx_counter = $(".selected").attr('data-idx-counter');
-
-        var query = $("#chat-input textarea").val();
-        //alert(text + " " + idx_counter)
-        console.log(idx_counter)
-        //alert( text + "," + idx_counter );
-        $("#output").empty()
-        $("#output").append($("<div>", {"class": "start-char"}).text(">"));
-        //var query = $("#chat-input textarea").val();
-        let current_chunk_idx = 0;
+        if ($(".safenudge-toggle").is(':checked')) {
+            alert('Token editing is not allowed while SafeNudge(TM) is activated.')
+        } else {
+            var text = $(this).text()
+            var idx_counter = $(".selected").attr('data-idx-counter');
     
-        var random_state = $("#random-seed").val();
-        if (!random_state) {
-            random_state = Math.floor(Math.random() * 10000) + 1
-            console.log("RANDOM SATE USED: " + random_state)
-        }
-    
-        var sleep_time = $("#sleep-time").val();
-
-        var current_output = $("#data-store").attr('data-current-output');
-        $.ajax({
-            method: "POST",
-            dataType: 'text',
-            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?init_prompt="+query+"&content="+current_output+"&token_pos="+idx_counter+"&new_token="+text+"&k=20&T=1.3&max_new_tokens=10&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
-            crossDomain: true,
-            xhrFields: {
-                onprogress: function (event) {
-                    let chunk = event.currentTarget.responseText; //.responseText;
-                    let chunks = chunk.split("}\n");
-                    //console.log(chunks.length);
-                    //console.log(chunks);
-                    for (let i = current_chunk_idx; i < chunks.length; i++) {
-                        //console.log("--START--")
-                        
-                        let current_chunk = chunks[i];
-    
-                        if (current_chunk.slice(0,1) != "{") {
-                            current_chunk = "{" + current_chunk;
-                        }
-                        if (current_chunk.slice(-1) != "}") {
-                            current_chunk = current_chunk + "}";
-                        }
-    
-                        var obj = JSON.parse(current_chunk);
-                        console.log(obj)
-                        build(obj)
-                        
-                        //console.log("--END--")
-                    }
-                    current_chunk_idx = chunks.length-1;
-                    //console.log(myArray)
-                    //let current_chunk = chunk.slice(current_chunk_idx);
-                    //console.log(current_chunk);
-                    //var obj = JSON.parse(current_chunk);
-                    //console.log(obj);
-                    //current_chunk_idx = current_chunk_idx + current_chunk.length;
-                    //console.log(event.currentTarget)
-                    
-                    //console.log("Received chunk:", chunk);
-                }
-            },
-            success: function(data) {
-                $("#data-store").attr('data-current-output', data);
+            var query = $("#chat-input textarea").val();
+            //alert(text + " " + idx_counter)
+            console.log(idx_counter)
+            //alert( text + "," + idx_counter );
+            $("#output").empty()
+            $("#output").append($("<div>", {"class": "start-char"}).text(">"));
+            //var query = $("#chat-input textarea").val();
+            let current_chunk_idx = 0;
+        
+            var random_state = $("#random-seed").val();
+            if (!random_state) {
+                random_state = Math.floor(Math.random() * 10000) + 1
+                console.log("RANDOM SATE USED: " + random_state)
             }
-        })
+        
+            var sleep_time = $("#sleep-time").val();
+
+            var current_output = $("#data-store").attr('data-current-output');
+            $.ajax({
+                method: "POST",
+                dataType: 'text',
+                url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?init_prompt="+query+"&content="+current_output+"&token_pos="+idx_counter+"&new_token="+text+"&k=20&T=1.3&max_new_tokens=10&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
+                crossDomain: true,
+                xhrFields: {
+                    onprogress: function (event) {
+                        let chunk = event.currentTarget.responseText; //.responseText;
+                        let chunks = chunk.split("}\n");
+                        //console.log(chunks.length);
+                        //console.log(chunks);
+                        for (let i = current_chunk_idx; i < chunks.length; i++) {
+                            //console.log("--START--")
+                            
+                            let current_chunk = chunks[i];
+        
+                            if (current_chunk.slice(0,1) != "{") {
+                                current_chunk = "{" + current_chunk;
+                            }
+                            if (current_chunk.slice(-1) != "}") {
+                                current_chunk = current_chunk + "}";
+                            }
+        
+                            var obj = JSON.parse(current_chunk);
+                            console.log(obj)
+                            build(obj)
+                            
+                            //console.log("--END--")
+                        }
+                        current_chunk_idx = chunks.length-1;
+                        //console.log(myArray)
+                        //let current_chunk = chunk.slice(current_chunk_idx);
+                        //console.log(current_chunk);
+                        //var obj = JSON.parse(current_chunk);
+                        //console.log(obj);
+                        //current_chunk_idx = current_chunk_idx + current_chunk.length;
+                        //console.log(event.currentTarget)
+                        
+                        //console.log("Received chunk:", chunk);
+                    }
+                },
+                success: function(data) {
+                    $("#data-store").attr('data-current-output', data);
+                }
+            });
+        }
+
 
     });
 }
