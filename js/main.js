@@ -15,13 +15,22 @@ function getStream() {
         console.log("RANDOM SATE USED: " + random_state)
     }
 
+    /*
+    if ($(".toggle").is(':checked')) {
+        uncertainty = (1 - obj['probs'][obj['selected_idx']].toFixed(2));
+    } else {
+        uncertainty = 0
+    }
+    */
+
+
     var sleep_time = $("#sleep-time").val();
     //var obj = JSON.parse('{"texts": [" language", " computer", " large", " machine", " artificial", " convers", " neutral", " Language", " virtual", " model", " AI", " text", " general", " few", " chat", " digital", " tool", " simulator", " knowledge", " simulation", " random", " small", "Language", " cloud", " Computer", " vocabulary", " regular", " new", " software", " high"], "token_ids": [4221, 6500, 3544, 5780, 21075, 7669, 21277, 11688, 4200, 1646, 15592, 1495, 4689, 2478, 6369, 7528, 5507, 42991, 6677, 19576, 4288, 2678, 14126, 9624, 17863, 36018, 5912, 502, 3241, 1579], "probs": [0.7770468592643738, 0.21096745133399963, 0.008808881975710392, 0.0011465136194601655, 0.0002181360760005191, 0.00020011013839393854, 0.00016280323325190693, 0.00014177054981701076, 0.0001345007767667994, 0.000130185711896047, 0.00012971069372724742, 0.00010374825797043741, 8.20313289295882e-05, 7.384506898233667e-05, 6.564196519320831e-05, 6.458257121266797e-05, 5.7273053243989125e-05, 4.999424345442094e-05, 4.7059573262231424e-05, 4.5079923438606784e-05, 4.303768218960613e-05, 4.110042209504172e-05, 3.8817244785605e-05, 3.6033306969329715e-05, 3.040168303414248e-05, 2.7615524231805466e-05, 2.736878377618268e-05, 2.733159089984838e-05, 2.678219971130602e-05, 2.5384848413523287e-05], "selected_idx": 0, "selected_text": " language"}')
     //console.log(obj)
     $.ajax({
         method: "POST",
         dataType: 'text',
-        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=25&T=1.3&max_new_tokens=340&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
+        url: "https://llm-viz.users.hsrn.nyu.edu/generate?init_prompt="+query+"&k=20&T=1.3&max_new_tokens=340&verbose=false&random_state="+random_state+"&sleep_time="+sleep_time,
         crossDomain: true,
         xhrFields: {
             onprogress: function (event) {
@@ -58,6 +67,9 @@ function getStream() {
                 
                 //console.log("Received chunk:", chunk);
             }
+        },
+        success: function(data) {
+            $("#data-store").attr('data-current-output', data);
         }
     })
 }
@@ -66,7 +78,7 @@ async function build(obj) {
     texts = obj['texts'];
     probs = obj['probs'];
 
-    if ($(".toggle").is(':checked')) {
+    if ($(".uncertainty-toggle").is(':checked')) {
         uncertainty = (1 - obj['probs'][obj['selected_idx']].toFixed(2));
     } else {
         uncertainty = 0
@@ -84,6 +96,10 @@ async function build(obj) {
                 .text(obj['selected_text'])
                 .css("background-color", "rgba(231, 76, 60," + uncertainty + ")")
     );
+
+    console.log("HERE5", data['idx_counter'])
+    
+    //console.log("HERE4", $("#data-store").data('current_output'));
 }
 
 function isObject(obj)
@@ -103,7 +119,7 @@ function barplot_new(data) {
     // Chart dimensions
     const margin = { top: 20, right: 30, bottom: 40, left: 100 };
     const width = 260 - margin.left - margin.right;
-    const height = 465 - margin.top - margin.bottom; // You can add 15 pixels of extra height here... not sure why, maybe marigns/padding?
+    const height = 415 - margin.top - margin.bottom; // You can add 15 pixels of extra height here... not sure why, maybe marigns/padding?
 
     // Create SVG container
     const svg = d3.select('#barplot')
@@ -174,6 +190,8 @@ function barplot_new(data) {
     $(".tick").on( "click", function() {
         var text = $(this).text()
         var idx_counter = $(".selected").attr('data-idx-counter');
+
+        var query = $("#chat-input textarea").val();
         //alert(text + " " + idx_counter)
         console.log(idx_counter)
         //alert( text + "," + idx_counter );
@@ -190,10 +208,11 @@ function barplot_new(data) {
     
         var sleep_time = $("#sleep-time").val();
 
+        var current_output = $("#data-store").attr('data-current-output');
         $.ajax({
             method: "POST",
             dataType: 'text',
-            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?idx_counter="+idx_counter+"&new_token_str="+text+"&k=25&T=1.3&max_new_tokens=340&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
+            url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?init_prompt="+query+"&data="+current_output+"&token_pos="+idx_counter+"&new_token="+text+"&k=20&T=1.3&max_new_tokens=340&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
             crossDomain: true,
             xhrFields: {
                 onprogress: function (event) {

@@ -39,7 +39,10 @@
         <div id="right-panel-bottom">
 
             <div class="uncertainty-controls">
-                <input class="toggle" type="checkbox"> <div class="uncertainty-controls-text">Display uncertainty</div>
+                <input class="toggle uncertainty-toggle" type="checkbox"> <div class="uncertainty-controls-text">Display uncertainty</div>
+            </div>
+            <div class="safenudge-controls">
+                <input class="toggle safenudge-toggle" type="checkbox"> <div class="safenudge-controls-text">SafeNudge&#x2122</div>
             </div>
             <div class="random-seed-controls">
                 <input id="random-seed" type="number" min="0" step="1" placeholder="0"></input> <div class="uncertainty-controls-text">Random state</div>
@@ -56,6 +59,7 @@
         </div>
     </div>
     
+    <div id="data-store" data-current-output=""></div>
     
 
 </div>
