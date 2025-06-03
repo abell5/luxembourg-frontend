@@ -249,6 +249,9 @@ function barplot_new(data) {
                     
                     //console.log("Received chunk:", chunk);
                 }
+            },
+            success: function(data) {
+                $("#data-store").attr('data-current-output', data);
             }
         })
 
