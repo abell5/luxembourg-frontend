@@ -219,7 +219,13 @@ function barplot_new(data) {
                 dataType: 'text',
                 url: "https://llm-viz.users.hsrn.nyu.edu/regenerate?init_prompt="+query+"&content="+current_output+"&token_pos="+idx_counter+"&new_token="+text+"&k=20&T=1.3&max_new_tokens=300&sleep_time="+sleep_time+"&verbose=true&random_state="+random_state,
                 crossDomain: true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type'
+                },
                 xhrFields: {
+                    withCredentials: false,
                     onprogress: function (event) {
                         let chunk = event.currentTarget.responseText; //.responseText;
                         let chunks = chunk.split("}\n");
